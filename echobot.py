@@ -68,7 +68,7 @@ def main() -> None:
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
 
     # Start the Bot
-    updater.start_polling()
+    #updater.start_polling()
 
 
     updater.start_webhook(listen="0.0.0.0", port=PORT, url_path=TOKEN)

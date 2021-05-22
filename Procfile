@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath run_server:server
+web: gunicorn --echobot.py run_server:server

@@ -54,7 +54,7 @@ def main() -> None:
     updater = Updater("1799663427:AAGtEv0w0-x23CD8cUaeCrmE9bTlTHZWpkc")
     #updater = Updater(TOKEN)
 
-    PORT = int(os.environ.get('PORT', '5000'))
+    PORT = int(os.environ.get('PORT', '80'))
     TOKEN = str(os.environ.get('TOKEN'))
 
     # Get the dispatcher to register handlers

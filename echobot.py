@@ -51,6 +51,9 @@ def main() -> None:
     """Start the bot."""
     # Create the Updater and pass it your bot's token.
     updater = Updater("1799663427:AAGtEv0w0-x23CD8cUaeCrmE9bTlTHZWpkc")
+    #updater = Updater(TOKEN)
+
+    PORT = int(os.environ.get('PORT', '5000'))
 
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
@@ -64,6 +67,11 @@ def main() -> None:
 
     # Start the Bot
     updater.start_polling()
+
+
+    updater.start_webhook(listen="0.0.0.0", port=PORT, url_path=TOKEN)
+    updater.bot.set_webhook('https://morning-workout-bot.herokuapp.com/' + TOKEN)
+
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since

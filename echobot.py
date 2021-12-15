@@ -47,6 +47,11 @@ def echo(update: Update, _: CallbackContext) -> None:
     """Echo the user message."""
     update.message.reply_text(update.message.text)
 
+    
+def help_command(update: Update, _: CallbackContext) -> None:
+    """Send a message when the command /help is issued."""
+    update.message.reply_text('Help!')
+
 
 def main() -> None:
     """Start the bot."""

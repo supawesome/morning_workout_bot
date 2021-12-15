@@ -44,13 +44,12 @@ def start(update: Update, context: CallbackContext) -> None:
         '🎲'
     ]
 
-    reply_markup = ReplyKeyboardMarkup(keyboard)
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
     update.message.reply_text(
         'Hi, this is a workout bot. \n'
         "Let's roll the dice to get a nice pseudo-random morning workout",
-        reply_markup=reply_markup,
-        resize_keyboard=True
+        reply_markup=reply_markup
     )
 
 

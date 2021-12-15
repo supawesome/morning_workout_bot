@@ -18,6 +18,8 @@ import os
 
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+# from configs.app_config import app_token # TODO: kill
+
 
 # Enable logging
 logging.basicConfig(
@@ -40,7 +42,7 @@ def start(update: Update, _: CallbackContext) -> None:
 
 def help_command(update: Update, _: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
-    update.message.reply_text('Help!')
+    update.message.reply_text('Help!11111')
 
 
 def echo(update: Update, _: CallbackContext) -> None:
@@ -48,16 +50,18 @@ def echo(update: Update, _: CallbackContext) -> None:
     update.message.reply_text(update.message.text)
 
     
-def help_command(update: Update, _: CallbackContext) -> None:
-    """Send a message when the command /help is issued."""
-    update.message.reply_text('Help!')
+# def help_command(update: Update, _: CallbackContext) -> None:
+#     """Send a message when the command /help is issued."""
+#     update.message.reply_text('Help!')
 
 
 def main() -> None:
     """Start the bot."""
     # Create the Updater and pass it your bot's token.
     PORT = int(os.environ.get('PORT', '80'))
-    TOKEN = str(os.environ.get('TOKEN'))
+    TOKEN = str(os.environ.get('TOKEN')) # TODO: alive
+    # TOKEN = app_token # TODO: kill
+
 
     updater = Updater(TOKEN)
 

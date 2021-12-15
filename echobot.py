@@ -50,12 +50,13 @@ def start(update: Update, context: CallbackContext) -> None:
         'Hi, this is a workout bot. \n'
         "Let's roll the dice to get a nice pseudo-random morning workout",
         reply_markup=reply_markup,
+        resize_keyboard=TRUE
     )
 
 
 # exercise_dict = {'upper': ('one', 'two'), 'middle': 'three'}
 
-def get_random_exercise(exercise_dict: dict) -> dict:
+def get_random_exercises(exercise_dict: dict) -> dict:
     """
     Returns 1 random exercise for each category
     exercise_dict is a dict of lists
@@ -76,7 +77,9 @@ def get_workout(update: Update, context: CallbackContext) -> None:
 
     if update.message.text == '🎲':
         for key in TEST_EXERCISES_DICT:
-            update.message.reply_text(TEST_EXERCISES_DICT[key])
+            update.message.reply_text(
+                get_random_exercises(TEST_EXERCISES_DICT)[key]
+            ).encode('utf-8')
 
         # update.message.reply_text(
         #     for key in TEST_EXERCISES_DICT:
@@ -129,9 +132,6 @@ def main() -> None:
                           url_path=TOKEN,
                           webhook_url='https://morning-workout-bot.herokuapp.com/' + TOKEN)
 
-    # Run the bot until you press Ctrl-C or the process receives SIGINT,
-    # SIGTERM or SIGABRT. This should be used most of the time, since
-    # start_polling() is non-blocking and will stop the bot gracefully.
     updater.idle()
 
 

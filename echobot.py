@@ -15,11 +15,17 @@ bot.
 
 import logging
 import os
+import random
 
 from telegram import Update, ForceReply, ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
-# from configs.app_config import app_token # TODO: kill
 
+
+TEST_EXERCISES_DICT = {
+    'upper_body': ['анжуманя', 'турник'],
+    'middle_body': ['пресс качат', 'ещё пресс качат', 'и ещё пресс качат'],
+    'lower_body': ['приседания', 'приседания 2']
+}
 
 # Enable logging
 logging.basicConfig(
@@ -38,13 +44,46 @@ def start(update: Update, context: CallbackContext) -> None:
         '🎲'
     ]
 
-    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+    reply_markup = ReplyKeyboardMarkup(keyboard)
 
     update.message.reply_text(
         'Hi, this is a workout bot. \n'
-        'Lets roll the dice',
+        "Let's roll the dice to get a nice pseudo-random morning workout",
         reply_markup=reply_markup,
     )
+
+
+# exercise_dict = {'upper': ('one', 'two'), 'middle': 'three'}
+
+def get_random_exercise(exercise_dict: dict) -> dict:
+    """
+    Returns 1 random exercise for each category
+    exercise_dict is a dict of lists
+    """
+
+    random_exercises = {}
+
+    for key in exercise_dict:
+        no_exercises = len(exercise_dict[key])
+        n = random.randint(0, no_exercises - 1)
+        random_exercises[key] = exercise_dict[key][n]
+
+    return random_exercises
+
+
+def get_workout(update: Update, context: CallbackContext) -> None:
+    """Send a workout when the user rolled the dice"""
+
+    if update.message.text == '🎲':
+        for key in TEST_EXERCISES_DICT:
+            update.message.reply_text(TEST_EXERCISES_DICT[key])
+
+        # update.message.reply_text(
+        #     for key in TEST_EXERCISES_DICT:
+        #         print(TEST_EXERCISES_DICT[key])
+        # )
+    else:
+        pass
 
 
 def help_command(update: Update, context: CallbackContext) -> None:
@@ -75,6 +114,7 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("help", help_command))
 
     # on non command i.e message - echo the message on Telegram
+    dispatcher.add_handler(MessageHandler(Filters.regex('🎲') & ~Filters.command, get_workout))
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
 
     # Start the Bot

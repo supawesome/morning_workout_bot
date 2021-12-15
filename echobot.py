@@ -16,7 +16,7 @@ bot.
 import logging
 import os
 
-from telegram import Update, ForceReply
+from telegram import Update, ForceReply, ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 # from configs.app_config import app_token # TODO: kill
 
@@ -31,28 +31,30 @@ logger = logging.getLogger(__name__)
 
 # Define a few command handlers. These usually take the two arguments update and
 # context.
-def start(update: Update, _: CallbackContext) -> None:
+def start(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /start is issued."""
-    user = update.effective_user
-    update.message.reply_markdown_v2(
-        fr'Hi {user.mention_markdown_v2()}\!',
-        reply_markup=ForceReply(selective=True),
+    # user = update.effective_user
+    keyboard = [
+        '🎲'
+    ]
+
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+
+    update.message.reply_text(
+        'Hi, this is a workout bot. \n'
+        'Lets roll the dice',
+        reply_markup=reply_markup,
     )
 
 
-def help_command(update: Update, _: CallbackContext) -> None:
+def help_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
     update.message.reply_text('Help!11111')
 
 
-def echo(update: Update, _: CallbackContext) -> None:
+def echo(update: Update, context: CallbackContext) -> None:
     """Echo the user message."""
     update.message.reply_text(update.message.text)
-
-    
-# def help_command(update: Update, _: CallbackContext) -> None:
-#     """Send a message when the command /help is issued."""
-#     update.message.reply_text('Help!')
 
 
 def main() -> None:

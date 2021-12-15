@@ -75,15 +75,19 @@ def get_workout(update: Update, context: CallbackContext) -> None:
     """Send a workout when the user rolled the dice"""
 
     if update.message.text == '🎲':
-        for key in TEST_EXERCISES_DICT:
-            update.message.reply_text(
-                get_random_exercises(TEST_EXERCISES_DICT)[key]
-            ).encode('utf-8')
+        random_exercise_list = []
 
-        # update.message.reply_text(
-        #     for key in TEST_EXERCISES_DICT:
-        #         print(TEST_EXERCISES_DICT[key])
-        # )
+        for key in TEST_EXERCISES_DICT:
+            random_exercise_list.append(get_random_exercises(TEST_EXERCISES_DICT)[key])
+
+        random_exercise_text = ', '.join(random_exercise_list)
+
+        update.message.reply_text(random_exercise_text).encode('utf-8')
+
+        # for key in TEST_EXERCISES_DICT:
+        #     update.message.reply_text(
+        #         get_random_exercises(TEST_EXERCISES_DICT)[key]
+        #     ).encode('utf-8')
     else:
         pass
 

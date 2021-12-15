@@ -79,7 +79,8 @@ def get_workout(update: Update, context: CallbackContext) -> None:
         for key in TEST_EXERCISES_DICT:
             update.message.reply_text(
                 get_random_exercises(TEST_EXERCISES_DICT)[key]
-            ).encode('utf-8')
+            )
+                # .encode('utf-8')
 
         # update.message.reply_text(
         #     for key in TEST_EXERCISES_DICT:

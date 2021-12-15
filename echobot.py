@@ -50,7 +50,7 @@ def start(update: Update, context: CallbackContext) -> None:
         'Hi, this is a workout bot. \n'
         "Let's roll the dice to get a nice pseudo-random morning workout",
         reply_markup=reply_markup,
-        resize_keyboard=TRUE
+        resize_keyboard=True
     )
 
 
@@ -79,8 +79,7 @@ def get_workout(update: Update, context: CallbackContext) -> None:
         for key in TEST_EXERCISES_DICT:
             update.message.reply_text(
                 get_random_exercises(TEST_EXERCISES_DICT)[key]
-            )
-                # .encode('utf-8')
+            ).encode('utf-8')
 
         # update.message.reply_text(
         #     for key in TEST_EXERCISES_DICT:

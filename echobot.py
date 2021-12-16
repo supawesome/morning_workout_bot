@@ -15,7 +15,7 @@ bot.
 
 import logging
 import os
-import random
+import random  #
 
 from telegram import Update, ForceReply, ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext

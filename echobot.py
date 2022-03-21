@@ -15,7 +15,11 @@ bot.
 
 import logging
 import os
+<<<<<<< HEAD
 import random
+=======
+import random  #
+>>>>>>> 372a2a9dc359db3fb09968bba4b6c72c2bd7bce8
 
 from telegram import Update, ForceReply, ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
@@ -84,6 +88,10 @@ def get_workout(update: Update, context: CallbackContext) -> None:
 
         update.message.reply_text(random_exercise_text).encode('utf-8')
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 372a2a9dc359db3fb09968bba4b6c72c2bd7bce8
         # for key in TEST_EXERCISES_DICT:
         #     update.message.reply_text(
         #         get_random_exercises(TEST_EXERCISES_DICT)[key]

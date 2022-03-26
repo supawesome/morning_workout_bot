@@ -95,7 +95,6 @@ def get_workout(update: Update, context: CallbackContext) -> None:
     """
 
     if update.message.text == '🎲':
-        random_exercise_list = []
 
         chat_id = update.message.chat_id
         username = update.message.from_user.username
@@ -136,8 +135,10 @@ def get_workout(update: Update, context: CallbackContext) -> None:
             distribution_double = [1 - double_perk_prob, double_perk_prob]
             distribution_chill = [1 - chill_perk_prob, chill_perk_prob]
 
-            double_perk_realization = random.choices([0, 1], distribution_double)
-            chill_perk_realization = random.choices([0, 1], distribution_chill)
+            procs = (0, 1)
+
+            double_perk_realization = random.choices(procs, distribution_double)
+            chill_perk_realization = random.choices(procs, distribution_chill)
 
             # update.message.reply_text('double_perk_realization')
             # update.message.reply_text(double_perk_realization)
@@ -147,22 +148,26 @@ def get_workout(update: Update, context: CallbackContext) -> None:
             if double_perk_realization[0] == 1:
                 # update.message.reply_text('BOOM! You rolled rare Double perk! Do all exercises TWICE as usual!').encode('utf-8')
                 cursor.execute(f"UPDATE users_test SET double_perk = 0 WHERE chat_id = '{chat_id}';")
-                conn.commit()
+                # conn.commit()
             else:
                 cursor.execute(f"UPDATE users_test SET double_perk = double_perk + 1 WHERE chat_id = '{chat_id}';")
-                conn.commit()
+                # conn.commit()
+            conn.commit()
 
             if chill_perk_realization[0] == 1:
                 # update.message.reply_text('WOW! You rolled rare Chill perk! No need to do these exercises for today!').encode(
                 #     'utf-8')
                 cursor.execute(f"UPDATE users_test SET chill_perk = 0 WHERE chat_id = '{chat_id}';")
-                conn.commit()
+                # conn.commit()
             else:
                 cursor.execute(f"UPDATE users_test SET chill_perk = chill_perk + 1 WHERE chat_id = '{chat_id}';")
-                conn.commit()
+                # conn.commit()
+            conn.commit()
 
         cursor.close()
         conn.close()
+
+        random_exercise_list = []
 
         for key in EXERCISES_DICT:
             random_exercise_list.append(get_random_exercises(EXERCISES_DICT)[key])
@@ -183,8 +188,8 @@ def get_workout(update: Update, context: CallbackContext) -> None:
                 'utf-8')
         else:
             update.message.reply_text(random_exercise_text).encode('utf-8')
-    else:
-        pass
+    # else:
+    #     pass
 
 
 def help_command(update: Update, context: CallbackContext) -> None:

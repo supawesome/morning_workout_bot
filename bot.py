@@ -1,21 +1,18 @@
-#!/usr/bin/env python
-# pylint: disable=C0116
-# This program is dedicated to the public domain under the CC0 license.
-
-import logging
+# import logging
 import os
 import random
 import csv
+
 import psycopg2
 from telegram import Update, ForceReply, ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
-# Enable logging
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
-)
-
-logger = logging.getLogger(__name__)
+# # Enable logging
+# logging.basicConfig(
+#     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
+# )
+#
+# logger = logging.getLogger(__name__)
 
 
 DATABASE_URL = str(os.environ.get('DATABASE_URL'))
@@ -24,11 +21,11 @@ DOUBLE_PERK_C = 0.014746  # 10%
 
 
 def start(update: Update, context: CallbackContext) -> None:
-    """Send a 'Hello' message when the command /start is issued."""
+    """Sends a 'Hello' message when the command /start is issued."""
     # user = update.effective_user
 
     keyboard = [
-        '🎲'
+        '🎲',
     ]
 
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
@@ -46,16 +43,14 @@ def start(update: Update, context: CallbackContext) -> None:
 
 
 def get_exercises(filename: str) -> dict:
-    """
-    Get exercises from csv and place them in a dict
-    """
+    """Gets data from csv file and places them in a dict."""
 
     exercises_dict = {}
+    exercises_list = []
 
     with open(filename, mode='r') as infile:
         reader = csv.reader(infile)
         header = next(reader) # to refactor
-        exercises_list = []
         for row in reader:
             exercises_list.append(row)
 
@@ -71,10 +66,12 @@ def get_exercises(filename: str) -> dict:
 
 
 def get_random_exercises(exercise_dict: dict) -> dict:
+    """Returns 1 random exercise for each category.
+
+    Args:
+        exercise_dict: A dict of lists
     """
-    Returns 1 random exercise for each category.
-    exercise_dict is a dict of lists
-    """
+# todo document and explain more in docstring
 
     random_exercises = {}
 
@@ -90,11 +87,10 @@ EXERCISES_DICT = get_exercises('exercises.csv')
 
 
 def get_workout(update: Update, context: CallbackContext) -> None:
-    """
-    Send a workout once the user rolled the dice
+    """Sends a workout once the user rolled the dice.
 
     Actually, this function is needed to:
-    1) decide if perks have occured
+    1) decide if perks have occurred
     2) update proc of a Perks
     """
 
@@ -137,13 +133,11 @@ def get_workout(update: Update, context: CallbackContext) -> None:
             # update.message.reply_text(chill_perk_cnt)
             # update.message.reply_text(chill_perk_prob)
 
-            proc_list = [0, 1]
-
             distribution_double = [1 - double_perk_prob, double_perk_prob]
             distribution_chill = [1 - chill_perk_prob, chill_perk_prob]
 
-            double_perk_realization = random.choices(proc_list, distribution_double)
-            chill_perk_realization = random.choices(proc_list, distribution_chill)
+            double_perk_realization = random.choices([0, 1], distribution_double)
+            chill_perk_realization = random.choices([0, 1], distribution_chill)
 
             # update.message.reply_text('double_perk_realization')
             # update.message.reply_text(double_perk_realization)
@@ -194,7 +188,7 @@ def get_workout(update: Update, context: CallbackContext) -> None:
 
 
 def help_command(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /help is issued."""
+    """Sends a message when the command /help is issued."""
 
     update.message.reply_text(
         'Just tap on dice and get a set of random exercises \n \n'
@@ -212,7 +206,7 @@ def help_command(update: Update, context: CallbackContext) -> None:
 
 
 def main() -> None:
-    """Start the bot."""
+    """Starts the bot."""
     # Create the Updater and pass it your bot's token.
     PORT = int(os.environ.get('PORT', '80'))
     TOKEN = str(os.environ.get('TOKEN'))

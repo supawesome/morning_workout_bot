@@ -31,7 +31,7 @@ def start(update: Update, context: CallbackContext) -> None:
         '🎲'
     ]
 
-    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=False)
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
     update.message.reply_text(
         'Hi, this is a workout bot. \n'

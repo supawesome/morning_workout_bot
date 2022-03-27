@@ -75,7 +75,7 @@ def get_random_exercises(exercise_dict: dict) -> dict:
 
     random_exercises = {}
 
-    for key, value in enumerate(exercise_dict):
+    for (key, value) in exercise_dict.items():
         no_exercises = len(value)
         n = random.randint(0, no_exercises - 1)
         random_exercises[key] = value[n]

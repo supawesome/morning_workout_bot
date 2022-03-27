@@ -82,7 +82,7 @@ def get_workout(update: Update, context: CallbackContext) -> None:
     2) update proc of events
     """
 
-    if update.message.text == '🎲':
+    if (update.message.text == '🎲') or (update.message.dice is True):
 
         chat_id = update.message.chat_id
         username = update.message.from_user.username

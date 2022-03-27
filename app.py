@@ -21,9 +21,9 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help_command))
 
-    dice_sticker = constants.DICE_DICE
+    # dice_sticker = constants.DICE_DICE
 
-    dispatcher.add_handler(MessageHandler((Filters.regex('🎲') | Filters.regex(dice_sticker))
+    dispatcher.add_handler(MessageHandler((Filters.regex('🎲') | Filters.dice.dice)
                                           & ~Filters.command,
                                           get_workout))
 

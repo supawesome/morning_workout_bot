@@ -23,7 +23,8 @@ def main() -> None:
 
     # dice_sticker = constants.DICE_DICE
 
-    dispatcher.add_handler(MessageHandler((Filters.regex('🎲') | Filters.dice.dice)
+    # dispatcher.add_handler(MessageHandler((Filters.regex('🎲') | Filters.dice.dice)
+    dispatcher.add_handler(MessageHandler((Filters.regex('🎲') | Filters.dice)
                                           & ~Filters.command,
                                           get_workout))
 

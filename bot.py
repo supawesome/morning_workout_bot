@@ -15,13 +15,8 @@ DOUBLE_EVENT_C = 0.014746  # 10%
 def start(update: Update, context: CallbackContext) -> None:
     """Sends a 'Hello' message when the command /start is issued."""
 
-    # keyboard = [
-    #     '🎲',
-    # ]
-
     keyboard = [
         constants.DICE_DICE,
-        '🎲',
     ]
 
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
@@ -89,80 +84,80 @@ def get_workout(update: Update, context: CallbackContext) -> None:
 
     dice_type = update.message.dice.emoji
 
-    if update.message.text == '🎲' or dice_type == constants.DICE_DICE or update.message.text == constants.DICE_DICE:
+    # if update.message.text == '🎲' or dice_type == constants.DICE_DICE or update.message.text == constants.DICE_DICE:
 
-        chat_id = update.message.chat_id
-        username = update.message.from_user.username
+    chat_id = update.message.chat_id
+    username = update.message.from_user.username
 
-        conn = psycopg2.connect(DATABASE_URL)
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT chat_id FROM users WHERE chat_id = '{chat_id}'")
-        query_result = cursor.fetchone()
+    conn = psycopg2.connect(DATABASE_URL)
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT chat_id FROM users WHERE chat_id = '{chat_id}'")
+    query_result = cursor.fetchone()
 
-        if query_result is None:
-            cursor.execute(f"INSERT INTO users (chat_id, username, double_event_counter, chill_event_counter)"
-                           f" VALUES ('{chat_id}', '{username}', 0, 0)")
-            conn.commit()
+    if query_result is None:
+        cursor.execute(f"INSERT INTO users (chat_id, username, double_event_counter, chill_event_counter)"
+                       f" VALUES ('{chat_id}', '{username}', 0, 0)")
+        conn.commit()
+    else:
+        cursor.execute(f"SELECT double_event_counter FROM users WHERE chat_id = '{chat_id}'")
+        double_event_cnt = cursor.fetchone()
+        double_event_counter = double_event_cnt[0] + 1
+        double_event_prob = DOUBLE_EVENT_C * double_event_counter
+
+        cursor.execute(f"SELECT chill_event_counter FROM users WHERE chat_id = '{chat_id}'")
+        chill_event_cnt = cursor.fetchone()
+        chill_event_counter = chill_event_cnt[0] + 1
+        chill_event_prob = CHILL_EVENT_C * chill_event_counter
+
+        distribution_double = [1 - double_event_prob, double_event_prob]
+        distribution_chill = [1 - chill_event_prob, chill_event_prob]
+
+        procs = (0, 1)
+
+        double_event_realization = random.choices(procs, distribution_double)
+        chill_event_realization = random.choices(procs, distribution_chill)
+
+        if double_event_realization[0] == 1:
+            cursor.execute(f"UPDATE users SET double_event_counter = 0 WHERE chat_id = '{chat_id}';")
         else:
-            cursor.execute(f"SELECT double_event_counter FROM users WHERE chat_id = '{chat_id}'")
-            double_event_cnt = cursor.fetchone()
-            double_event_counter = double_event_cnt[0] + 1
-            double_event_prob = DOUBLE_EVENT_C * double_event_counter
+            cursor.execute(f"UPDATE users SET double_event_counter = double_event_counter + 1 "
+                           f"WHERE chat_id = '{chat_id}';")
+        conn.commit()
 
-            cursor.execute(f"SELECT chill_event_counter FROM users WHERE chat_id = '{chat_id}'")
-            chill_event_cnt = cursor.fetchone()
-            chill_event_counter = chill_event_cnt[0] + 1
-            chill_event_prob = CHILL_EVENT_C * chill_event_counter
-
-            distribution_double = [1 - double_event_prob, double_event_prob]
-            distribution_chill = [1 - chill_event_prob, chill_event_prob]
-
-            procs = (0, 1)
-
-            double_event_realization = random.choices(procs, distribution_double)
-            chill_event_realization = random.choices(procs, distribution_chill)
-
-            if double_event_realization[0] == 1:
-                cursor.execute(f"UPDATE users SET double_event_counter = 0 WHERE chat_id = '{chat_id}';")
-            else:
-                cursor.execute(f"UPDATE users SET double_event_counter = double_event_counter + 1 "
-                               f"WHERE chat_id = '{chat_id}';")
-            conn.commit()
-
-            if chill_event_realization[0] == 1:
-                cursor.execute(f"UPDATE users SET chill_event_counter = 0 WHERE chat_id = '{chat_id}';")
-            else:
-                cursor.execute(f"UPDATE users SET chill_event_counter = chill_event_counter + 1 "
-                               f"WHERE chat_id = '{chat_id}';")
-            conn.commit()
-
-        cursor.close()
-        conn.close()
-
-        random_exercise_list = []
-
-        exercises_dict = get_exercises('Config/exercises.csv')
-
-        for key in exercises_dict:
-            random_exercise_list.append(get_random_exercises(exercises_dict)[key])
-
-        random_exercise_text = ',\n'.join(random_exercise_list)
-        if double_event_realization[0] == 1 and chill_event_realization[0] == 1:
-            update.message.reply_text(
-                'WOW! You rolled rare Chill event! No need to do these exercises for today!').encode(
-                    'utf-8')
-        elif double_event_realization[0] == 1 and chill_event_realization[0] == 0:
-            update.message.reply_text('BOOM! You rolled rare Double event! '
-                                      'Do TWICE more reps as usual for each exercise! \n \n' +
-                                      random_exercise_text).encode(
-                'utf-8')
-        elif double_event_realization[0] == 0 and chill_event_realization[0] == 1:
-            update.message.reply_text(
-                'WOW! You rolled rare Chill event! '
-                'No need to do these exercises for today!').encode(
-                'utf-8')
+        if chill_event_realization[0] == 1:
+            cursor.execute(f"UPDATE users SET chill_event_counter = 0 WHERE chat_id = '{chat_id}';")
         else:
-            update.message.reply_text(random_exercise_text).encode('utf-8')
+            cursor.execute(f"UPDATE users SET chill_event_counter = chill_event_counter + 1 "
+                           f"WHERE chat_id = '{chat_id}';")
+        conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    random_exercise_list = []
+
+    exercises_dict = get_exercises('Config/exercises.csv')
+
+    for key in exercises_dict:
+        random_exercise_list.append(get_random_exercises(exercises_dict)[key])
+
+    random_exercise_text = ',\n'.join(random_exercise_list)
+    if double_event_realization[0] == 1 and chill_event_realization[0] == 1:
+        update.message.reply_text(
+            'WOW! You rolled rare Chill event! No need to do these exercises for today!').encode(
+                'utf-8')
+    elif double_event_realization[0] == 1 and chill_event_realization[0] == 0:
+        update.message.reply_text('BOOM! You rolled rare Double event! '
+                                  'Do TWICE more reps as usual for each exercise! \n \n' +
+                                  random_exercise_text).encode(
+            'utf-8')
+    elif double_event_realization[0] == 0 and chill_event_realization[0] == 1:
+        update.message.reply_text(
+            'WOW! You rolled rare Chill event! '
+            'No need to do these exercises for today!').encode(
+            'utf-8')
+    else:
+        update.message.reply_text(random_exercise_text).encode('utf-8')
 
 
 def help_command(update: Update, context: CallbackContext) -> None:

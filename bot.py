@@ -21,6 +21,7 @@ def start(update: Update, context: CallbackContext) -> None:
 
     keyboard = [
         constants.DICE_DICE,
+        '🎲',
     ]
 
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)

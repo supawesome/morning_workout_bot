@@ -26,7 +26,7 @@ def main() -> None:
 
     # dispatcher.add_handler(MessageHandler((Filters.regex('🎲') | Filters.dice.dice)
     dispatcher.add_handler(MessageHandler(
-        (Filters.regex('🎲') | Filters.dice.dice)
+        Filters.regex('🎲')
         & ~Filters.command,
         get_workout)
     )

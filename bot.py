@@ -1,4 +1,3 @@
-# import logging
 import os
 import random
 import csv
@@ -6,14 +5,6 @@ import csv
 import psycopg2
 from telegram import Update, ForceReply, ReplyKeyboardMarkup
 from telegram.ext import CallbackContext
-# from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
-
-# # Enable logging
-# logging.basicConfig(
-#     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
-# )
-#
-# logger = logging.getLogger(__name__)
 
 
 DATABASE_URL = str(os.environ.get('DATABASE_URL'))
@@ -23,7 +14,6 @@ DOUBLE_EVENT_C = 0.014746  # 10%
 
 def start(update: Update, context: CallbackContext) -> None:
     """Sends a 'Hello' message when the command /start is issued."""
-    # user = update.effective_user
 
     keyboard = [
         '🎲',
@@ -183,5 +173,3 @@ def help_command(update: Update, context: CallbackContext) -> None:
 # def echo(update: Update, context: CallbackContext) -> None:
 #     """Echo the user message."""
 #     update.message.reply_text(update.message.text)
-
-

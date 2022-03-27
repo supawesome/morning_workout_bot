@@ -3,7 +3,7 @@ import random
 import csv
 
 import psycopg2
-from telegram import Update, ReplyKeyboardMarkup
+from telegram import Update, ReplyKeyboardMarkup, constants
 from telegram.ext import CallbackContext
 
 
@@ -82,7 +82,9 @@ def get_workout(update: Update, context: CallbackContext) -> None:
     2) update proc of events
     """
 
-    if (update.message.text == '🎲') or (update.message.dice is True):
+    dice_type = update.message.dice.emoji
+
+    if (update.message.text == '🎲') or (dice_type == constants.DICE_DICE):
 
         chat_id = update.message.chat_id
         username = update.message.from_user.username

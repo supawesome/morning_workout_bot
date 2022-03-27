@@ -89,7 +89,7 @@ def get_workout(update: Update, context: CallbackContext) -> None:
 
         conn = psycopg2.connect(DATABASE_URL)
         cursor = conn.cursor()
-        cursor.execute(f"SELECT id FROM users WHERE chat_id = '{chat_id}'")
+        cursor.execute(f"SELECT chat_id FROM users WHERE chat_id = '{chat_id}'")
         query_result = cursor.fetchone()
 
         if query_result is None:

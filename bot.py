@@ -101,20 +101,20 @@ def get_workout(update: Update, context: CallbackContext) -> None:
 
         conn = psycopg2.connect(DATABASE_URL)
         cursor = conn.cursor()
-        cursor.execute(f"SELECT id FROM users_test WHERE chat_id = '{chat_id}'")
+        cursor.execute(f"SELECT id FROM users WHERE chat_id = '{chat_id}'")
         query_result = cursor.fetchone()
 
         if query_result is None:
-            cursor.execute(f"INSERT INTO users_test (chat_id, username, double_perk, chill_perk)"
+            cursor.execute(f"INSERT INTO users (chat_id, username, double_event_counter, chill_event_counter)"
                            f" VALUES ('{chat_id}', '{username}', 0, 0)")
             conn.commit()
         else:
-            cursor.execute(f"SELECT double_perk FROM users_test WHERE chat_id = '{chat_id}'")
+            cursor.execute(f"SELECT double_event_counter FROM users_test WHERE chat_id = '{chat_id}'")
             double_perk_cnt = cursor.fetchone()
             double_perk_counter = double_perk_cnt[0] + 1
             double_perk_prob = DOUBLE_PERK_C * double_perk_counter
 
-            cursor.execute(f"SELECT chill_perk FROM users_test WHERE chat_id = '{chat_id}'")
+            cursor.execute(f"SELECT chill_event_counter FROM users_test WHERE chat_id = '{chat_id}'")
             chill_perk_cnt = cursor.fetchone()
             chill_perk_counter = chill_perk_cnt[0] + 1
             chill_perk_prob = CHILL_PERK_C * chill_perk_counter
@@ -128,15 +128,17 @@ def get_workout(update: Update, context: CallbackContext) -> None:
             chill_perk_realization = random.choices(procs, distribution_chill)
 
             if double_perk_realization[0] == 1:
-                cursor.execute(f"UPDATE users_test SET double_perk = 0 WHERE chat_id = '{chat_id}';")
+                cursor.execute(f"UPDATE users_test SET double_event_counter = 0 WHERE chat_id = '{chat_id}';")
             else:
-                cursor.execute(f"UPDATE users_test SET double_perk = double_perk + 1 WHERE chat_id = '{chat_id}';")
+                cursor.execute(f"UPDATE users_test SET double_event_counter = double_event_counter + 1 "
+                               f"WHERE chat_id = '{chat_id}';")
             conn.commit()
 
             if chill_perk_realization[0] == 1:
-                cursor.execute(f"UPDATE users_test SET chill_perk = 0 WHERE chat_id = '{chat_id}';")
+                cursor.execute(f"UPDATE users_test SET chill_event_counter = 0 WHERE chat_id = '{chat_id}';")
             else:
-                cursor.execute(f"UPDATE users_test SET chill_perk = chill_perk + 1 WHERE chat_id = '{chat_id}';")
+                cursor.execute(f"UPDATE users_test SET chill_event_counter = chill_event_counter + 1 "
+                               f"WHERE chat_id = '{chat_id}';")
             conn.commit()
 
         cursor.close()

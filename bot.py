@@ -5,7 +5,8 @@ import csv
 
 import psycopg2
 from telegram import Update, ForceReply, ReplyKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+from telegram.ext import CallbackContext
+# from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
 # # Enable logging
 # logging.basicConfig(
@@ -143,10 +144,10 @@ def get_workout(update: Update, context: CallbackContext) -> None:
 
         random_exercise_list = []
 
-        EXERCISES_DICT = get_exercises('exercises.csv')
+        exercises_dict = get_exercises('Config/exercises.csv')
 
-        for key in EXERCISES_DICT:
-            random_exercise_list.append(get_random_exercises(EXERCISES_DICT)[key])
+        for key in exercises_dict:
+            random_exercise_list.append(get_random_exercises(exercises_dict)[key])
 
         random_exercise_text = ',\n'.join(random_exercise_list)
         if double_event_realization[0] == 1 and chill_event_realization[0] == 1:
@@ -184,31 +185,3 @@ def help_command(update: Update, context: CallbackContext) -> None:
 #     update.message.reply_text(update.message.text)
 
 
-def main() -> None:
-    """Starts the bot."""
-    # Create the Updater and pass it your bot's token.
-    PORT = int(os.environ.get('PORT', '80'))
-    TOKEN = str(os.environ.get('TOKEN'))
-
-    updater = Updater(TOKEN)
-
-    # Get the dispatcher to register handlers
-    dispatcher = updater.dispatcher
-
-    # commands:
-    dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("help", help_command))
-
-    dispatcher.add_handler(MessageHandler(Filters.regex('🎲') & ~Filters.command, get_workout))
-
-    # Start the Bot
-    updater.start_webhook(listen="0.0.0.0",
-                          port=PORT,
-                          url_path=TOKEN,
-                          webhook_url='https://morning-workout-bot.herokuapp.com/' + TOKEN)
-
-    updater.idle()
-
-
-if __name__ == '__main__':
-    main()

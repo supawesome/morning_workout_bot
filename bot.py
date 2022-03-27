@@ -83,9 +83,6 @@ def get_random_exercises(exercise_dict: dict) -> dict:
     return random_exercises
 
 
-EXERCISES_DICT = get_exercises('exercises.csv')
-
-
 def get_workout(update: Update, context: CallbackContext) -> None:
     """Sends a workout once the user rolled the dice.
 
@@ -145,6 +142,8 @@ def get_workout(update: Update, context: CallbackContext) -> None:
         conn.close()
 
         random_exercise_list = []
+
+        EXERCISES_DICT = get_exercises('exercises.csv')
 
         for key in EXERCISES_DICT:
             random_exercise_list.append(get_random_exercises(EXERCISES_DICT)[key])

@@ -16,8 +16,8 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 
 
 DATABASE_URL = str(os.environ.get('DATABASE_URL'))
-CHILL_PERK_C = 0.003802  # 5% https://gaming.stackexchange.com/questions/161430/calculating-the-constant-c-in-dota-2-pseudo-random-distribution?utm_source=pocket_mylist
-DOUBLE_PERK_C = 0.014746  # 10%
+CHILL_EVENT_C = 0.003802  # 5% https://gaming.stackexchange.com/questions/161430/calculating-the-constant-c-in-dota-2-pseudo-random-distribution?utm_source=pocket_mylist
+DOUBLE_EVENT_C= 0.014746  # 10%
 
 
 def start(update: Update, context: CallbackContext) -> None:
@@ -90,8 +90,8 @@ def get_workout(update: Update, context: CallbackContext) -> None:
     """Sends a workout once the user rolled the dice.
 
     Actually, this function is needed to:
-    1) decide if perks have occurred
-    2) update proc of a Perks
+    1) decide if events have occurred
+    2) update proc of events
     """
 
     if update.message.text == '🎲':
@@ -110,31 +110,31 @@ def get_workout(update: Update, context: CallbackContext) -> None:
             conn.commit()
         else:
             cursor.execute(f"SELECT double_event_counter FROM users WHERE chat_id = '{chat_id}'")
-            double_perk_cnt = cursor.fetchone()
-            double_perk_counter = double_perk_cnt[0] + 1
-            double_perk_prob = DOUBLE_PERK_C * double_perk_counter
+            double_event_cnt = cursor.fetchone()
+            double_event_counter = double_event_cnt[0] + 1
+            double_event_prob = DOUBLE_EVENT_C * double_event_counter
 
             cursor.execute(f"SELECT chill_event_counter FROM users WHERE chat_id = '{chat_id}'")
-            chill_perk_cnt = cursor.fetchone()
-            chill_perk_counter = chill_perk_cnt[0] + 1
-            chill_perk_prob = CHILL_PERK_C * chill_perk_counter
+            chill_event_cnt = cursor.fetchone()
+            chill_event_counter = chill_event_cnt[0] + 1
+            chill_event_prob = CHILL_EVENT_C * chill_event_counter
 
-            distribution_double = [1 - double_perk_prob, double_perk_prob]
-            distribution_chill = [1 - chill_perk_prob, chill_perk_prob]
+            distribution_double = [1 - double_event_prob, double_event_prob]
+            distribution_chill = [1 - chill_event_prob, chill_event_prob]
 
             procs = (0, 1)
 
-            double_perk_realization = random.choices(procs, distribution_double)
-            chill_perk_realization = random.choices(procs, distribution_chill)
+            double_event_realization = random.choices(procs, distribution_double)
+            chill_event_realization = random.choices(procs, distribution_chill)
 
-            if double_perk_realization[0] == 1:
+            if double_event_realization[0] == 1:
                 cursor.execute(f"UPDATE users SET double_event_counter = 0 WHERE chat_id = '{chat_id}';")
             else:
                 cursor.execute(f"UPDATE users SET double_event_counter = double_event_counter + 1 "
                                f"WHERE chat_id = '{chat_id}';")
             conn.commit()
 
-            if chill_perk_realization[0] == 1:
+            if chill_event_realization[0] == 1:
                 cursor.execute(f"UPDATE users SET chill_event_counter = 0 WHERE chat_id = '{chat_id}';")
             else:
                 cursor.execute(f"UPDATE users SET chill_event_counter = chill_event_counter + 1 "
@@ -150,18 +150,18 @@ def get_workout(update: Update, context: CallbackContext) -> None:
             random_exercise_list.append(get_random_exercises(EXERCISES_DICT)[key])
 
         random_exercise_text = ',\n'.join(random_exercise_list)
-        if double_perk_realization[0] == 1 and chill_perk_realization[0] == 1:
+        if double_event_realization[0] == 1 and chill_event_realization[0] == 1:
             update.message.reply_text(
-                'WOW! You rolled rare Chill perk! No need to do these exercises for today!').encode(
+                'WOW! You rolled rare Chill event! No need to do these exercises for today!').encode(
                     'utf-8')
-        elif double_perk_realization[0] == 1 and chill_perk_realization[0] == 0:
-            update.message.reply_text('BOOM! You rolled rare Double perk! '
+        elif double_event_realization[0] == 1 and chill_event_realization[0] == 0:
+            update.message.reply_text('BOOM! You rolled rare Double event! '
                                       'Do TWICE more reps as usual for each exercise! \n \n' +
                                       random_exercise_text).encode(
                 'utf-8')
-        elif double_perk_realization[0] == 0 and chill_perk_realization[0] == 1:
+        elif double_event_realization[0] == 0 and chill_event_realization[0] == 1:
             update.message.reply_text(
-                'WOW! You rolled rare Chill perk! '
+                'WOW! You rolled rare Chill event! '
                 'No need to do these exercises for today!').encode(
                 'utf-8')
         else:

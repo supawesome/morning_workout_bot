@@ -26,16 +26,16 @@ def main() -> None:
 
     # dispatcher.add_handler(MessageHandler((Filters.regex('🎲') | Filters.dice.dice)
     dispatcher.add_handler(MessageHandler(
-        Filters.regex('🎲')
+        (Filters.regex('🎲') | Filters.dice.dice)
         & ~Filters.command,
         get_workout)
     )
 
-    dispatcher.add_handler(MessageHandler(
-        Filters.dice.dice
-        & ~Filters.command,
-        get_workout)
-    )
+    # dispatcher.add_handler(MessageHandler(
+    #     Filters.dice.dice
+    #     & ~Filters.command,
+    #     get_workout)
+    # )
 
     # Start the Bot
     updater.start_webhook(listen="0.0.0.0",

@@ -3,7 +3,7 @@ import random
 import csv
 
 import psycopg2
-from telegram import Update, ForceReply, ReplyKeyboardMarkup
+from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import CallbackContext
 
 

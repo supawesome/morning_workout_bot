@@ -1,6 +1,6 @@
 import os
 
-from telegram import constants, Dice
+# from telegram import constants, Dice
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 from bot import start, help_command, get_workout

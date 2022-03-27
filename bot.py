@@ -106,31 +106,18 @@ def get_workout(update: Update, context: CallbackContext) -> None:
 
         if query_result is None:
             cursor.execute(f"INSERT INTO users_test (chat_id, username, double_perk, chill_perk)"
-                           f" VALUES ('{chat_id}', '{username}', 0, 0)") # или 1,1?
+                           f" VALUES ('{chat_id}', '{username}', 0, 0)")
             conn.commit()
         else:
             cursor.execute(f"SELECT double_perk FROM users_test WHERE chat_id = '{chat_id}'")
-            # double_perk_counter = cursor.fetchone()
             double_perk_cnt = cursor.fetchone()
-            double_perk_counter = double_perk_cnt[0] + 1  # ?
-            # double_perk_counter += 1 #?
+            double_perk_counter = double_perk_cnt[0] + 1
             double_perk_prob = DOUBLE_PERK_C * double_perk_counter
 
-            # update.message.reply_text('double_perk_prob')
-            # update.message.reply_text(double_perk_cnt)
-            # update.message.reply_text(double_perk_prob)
-
             cursor.execute(f"SELECT chill_perk FROM users_test WHERE chat_id = '{chat_id}'")
-            # update.message.reply_text('2.1.1')
-            # chill_perk_counter = cursor.fetchone()
-            # chill_perk_counter += 1 #?
             chill_perk_cnt = cursor.fetchone()
-            chill_perk_counter = chill_perk_cnt[0] + 1 #?
+            chill_perk_counter = chill_perk_cnt[0] + 1
             chill_perk_prob = CHILL_PERK_C * chill_perk_counter
-
-            # update.message.reply_text('chill_perk_cnt')
-            # update.message.reply_text(chill_perk_cnt)
-            # update.message.reply_text(chill_perk_prob)
 
             distribution_double = [1 - double_perk_prob, double_perk_prob]
             distribution_chill = [1 - chill_perk_prob, chill_perk_prob]
@@ -140,28 +127,16 @@ def get_workout(update: Update, context: CallbackContext) -> None:
             double_perk_realization = random.choices(procs, distribution_double)
             chill_perk_realization = random.choices(procs, distribution_chill)
 
-            # update.message.reply_text('double_perk_realization')
-            # update.message.reply_text(double_perk_realization)
-            # update.message.reply_text('chill_perk_realization')
-            # update.message.reply_text(chill_perk_realization)
-
             if double_perk_realization[0] == 1:
-                # update.message.reply_text('BOOM! You rolled rare Double perk! Do all exercises TWICE as usual!').encode('utf-8')
                 cursor.execute(f"UPDATE users_test SET double_perk = 0 WHERE chat_id = '{chat_id}';")
-                # conn.commit()
             else:
                 cursor.execute(f"UPDATE users_test SET double_perk = double_perk + 1 WHERE chat_id = '{chat_id}';")
-                # conn.commit()
             conn.commit()
 
             if chill_perk_realization[0] == 1:
-                # update.message.reply_text('WOW! You rolled rare Chill perk! No need to do these exercises for today!').encode(
-                #     'utf-8')
                 cursor.execute(f"UPDATE users_test SET chill_perk = 0 WHERE chat_id = '{chat_id}';")
-                # conn.commit()
             else:
                 cursor.execute(f"UPDATE users_test SET chill_perk = chill_perk + 1 WHERE chat_id = '{chat_id}';")
-                # conn.commit()
             conn.commit()
 
         cursor.close()
@@ -181,7 +156,6 @@ def get_workout(update: Update, context: CallbackContext) -> None:
             update.message.reply_text('BOOM! You rolled rare Double perk! Do TWICE more reps as usual for each exercise! \n \n' +
                                       random_exercise_text).encode(
                 'utf-8')
-            # update.message.reply_text(random_exercise_text).encode('utf-8')
         elif double_perk_realization[0] == 0 and chill_perk_realization[0] == 1:
             update.message.reply_text(
                 'WOW! You rolled rare Chill perk! No need to do these exercises for today!').encode(
@@ -199,10 +173,9 @@ def help_command(update: Update, context: CallbackContext) -> None:
         'Just tap on dice and get a set of random exercises \n \n'
         'Why wortkout is pseudo random? Procs of special events are taken '
         'from Pseudo-Random Distribution (like random-based abilities in Dota 2) \n'
-        'You may read more about the mechanism here: '
+        'You can read more about the mechanism here: '
         'https://github.com/supawesome/morning_workout_bot/blob/main/PRD.md)'
     )
-
 
 
 # def echo(update: Update, context: CallbackContext) -> None:

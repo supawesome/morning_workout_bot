@@ -15,8 +15,12 @@ DOUBLE_EVENT_C = 0.014746  # 10%
 def start(update: Update, context: CallbackContext) -> None:
     """Sends a 'Hello' message when the command /start is issued."""
 
+    # keyboard = [
+    #     '🎲',
+    # ]
+
     keyboard = [
-        '🎲',
+        constants.DICE_DICE,
     ]
 
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
@@ -84,7 +88,7 @@ def get_workout(update: Update, context: CallbackContext) -> None:
 
     dice_type = update.message.dice.emoji
 
-    if (update.message.text == '🎲') or (dice_type == constants.DICE_DICE):
+    if update.message.text == '🎲' or dice_type == constants.DICE_DICE:
 
         chat_id = update.message.chat_id
         username = update.message.from_user.username

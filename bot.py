@@ -17,7 +17,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 
 DATABASE_URL = str(os.environ.get('DATABASE_URL'))
 CHILL_EVENT_C = 0.003802  # 5% https://gaming.stackexchange.com/questions/161430/calculating-the-constant-c-in-dota-2-pseudo-random-distribution?utm_source=pocket_mylist
-DOUBLE_EVENT_C= 0.014746  # 10%
+DOUBLE_EVENT_C = 0.014746  # 10%
 
 
 def start(update: Update, context: CallbackContext) -> None:
@@ -75,10 +75,10 @@ def get_random_exercises(exercise_dict: dict) -> dict:
 
     random_exercises = {}
 
-    for key in exercise_dict:
-        no_exercises = len(exercise_dict[key])
+    for key, value in enumerate(exercise_dict):
+        no_exercises = len(value)
         n = random.randint(0, no_exercises - 1)
-        random_exercises[key] = exercise_dict[key][n]
+        random_exercises[key] = value[n]
 
     return random_exercises
 
@@ -166,8 +166,6 @@ def get_workout(update: Update, context: CallbackContext) -> None:
                 'utf-8')
         else:
             update.message.reply_text(random_exercise_text).encode('utf-8')
-    # else:
-    #     pass
 
 
 def help_command(update: Update, context: CallbackContext) -> None:
@@ -175,7 +173,7 @@ def help_command(update: Update, context: CallbackContext) -> None:
 
     update.message.reply_text(
         'Just tap on dice and get a set of random exercises \n \n'
-        'Why wortkout is pseudo random? Procs of special events are taken '
+        'Why wortkout is pseudo random? Procs of special events are sampled '
         'from Pseudo-Random Distribution (like random-based abilities in Dota 2) \n'
         'You can read more about the mechanism here: '
         'https://github.com/supawesome/morning_workout_bot/blob/main/PRD.md)'

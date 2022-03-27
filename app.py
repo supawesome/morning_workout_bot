@@ -1,5 +1,6 @@
 import os
 
+from telegram import constants
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 from bot import start, help_command, get_workout
@@ -20,7 +21,11 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help_command))
 
-    dispatcher.add_handler(MessageHandler(Filters.regex('🎲') & ~Filters.command, get_workout))
+    dice_sticker = constants.DICE_DICE
+
+    dispatcher.add_handler(MessageHandler((Filters.regex('🎲') | Filters.regex(dice_sticker))
+                                          & ~Filters.command,
+                                          get_workout))
 
     # Start the Bot
     updater.start_webhook(listen="0.0.0.0",

@@ -163,14 +163,10 @@ def help_command(update: Update, context: CallbackContext) -> None:
     """Sends a message when the command /help is issued."""
 
     update.message.reply_text(
-        'Just tap on dice and get a set of random exercises \n \n'
-        'Why wortkout is pseudo random? Procs of special events are sampled '
+        'Just tap on dice and get a set of random exercises \n'
+        'Each exercise belongs to different muscle group (upper body, middle body or core and lower body) \n \n'
+        'Why workout is pseudo random? Procs of special events are sampled '
         'from Pseudo-Random Distribution (like random-based abilities in Dota 2) \n'
         'You can read more about the mechanism here: '
         'https://github.com/supawesome/morning_workout_bot/blob/main/PRD.md)'
     )
-
-
-# def echo(update: Update, context: CallbackContext) -> None:
-#     """Echo the user message."""
-#     update.message.reply_text(update.message.text)

@@ -16,7 +16,7 @@ def start(update: Update, context: CallbackContext) -> None:
     """Sends a 'Hello' message when the command /start is issued."""
 
     keyboard = [
-        '🎲🎲🎲',
+        '🎲',
     ]
 
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)

@@ -62,7 +62,6 @@ def get_random_exercises(exercise_dict: dict) -> dict:
     Args:
         exercise_dict: A dict of lists
     """
-# todo document and explain more in docstring
 
     random_exercises = {}
 
@@ -147,14 +146,14 @@ def get_workout(update: Update, context: CallbackContext) -> None:
             'WOW! You rolled rare Chill event! No need to do these exercises for today!').encode(
                 'utf-8')
     elif double_event_realization[0] == 1 and chill_event_realization[0] == 0:
-        update.message.reply_text('BOOM! You rolled rare Double event! '
-                                  'Do TWICE more reps as usual for each exercise! \n \n' +
+        update.message.reply_text("BOOM! You've rolled rare Double event! "
+                                  "Do TWICE more reps as usual for each exercise! \n \n" +
                                   random_exercise_text).encode(
             'utf-8')
     elif double_event_realization[0] == 0 and chill_event_realization[0] == 1:
         update.message.reply_text(
-            'WOW! You rolled rare Chill event! '
-            'No need to do these exercises for today!').encode(
+            "WOW! You've rolled rare Chill event! "
+            "No need to do exercises for today!").encode(
             'utf-8')
     else:
         update.message.reply_text(random_exercise_text).encode('utf-8')

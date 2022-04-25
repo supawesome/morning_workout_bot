@@ -16,7 +16,7 @@ def start(update: Update, context: CallbackContext) -> None:
     """Sends a 'Hello' message when the command /start is issued."""
 
     keyboard = [
-        constants.DICE_DICE,
+        '🎲🎲🎲',
     ]
 
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
@@ -82,7 +82,7 @@ def get_workout(update: Update, context: CallbackContext) -> None:
     2) update proc of events
     """
 
-    dice_type = update.message.dice.emoji
+    # dice_type = update.message.dice.emoji
 
     # if update.message.text == '🎲' or dice_type == constants.DICE_DICE or update.message.text == constants.DICE_DICE:
 

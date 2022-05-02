@@ -80,11 +80,6 @@ def get_workout(update: Update, context: CallbackContext) -> None:
     1) decide if events have occurred
     2) update proc of events
     """
-
-    # dice_type = update.message.dice.emoji
-
-    # if update.message.text == '🎲' or dice_type == constants.DICE_DICE or update.message.text == constants.DICE_DICE:
-
     chat_id = update.message.chat_id
     username = update.message.from_user.username
 
@@ -135,7 +130,7 @@ def get_workout(update: Update, context: CallbackContext) -> None:
 
     random_exercise_list = []
 
-    exercises_dict = get_exercises('config/exercises.csv')
+    exercises_dict = get_exercises(os.path.join('config', 'exercises.csv'))
 
     for key in exercises_dict:
         random_exercise_list.append(get_random_exercises(exercises_dict)[key])
@@ -143,18 +138,15 @@ def get_workout(update: Update, context: CallbackContext) -> None:
     random_exercise_text = ',\n'.join(random_exercise_list)
     if double_event_realization[0] == 1 and chill_event_realization[0] == 1:
         update.message.reply_text(
-            'WOW! You rolled rare Chill event! No need to do these exercises for today!').encode(
-                'utf-8')
+            'WOW! You rolled rare Chill event! No need to do these exercises for today!').encode('utf-8')
     elif double_event_realization[0] == 1 and chill_event_realization[0] == 0:
         update.message.reply_text("BOOM! You've rolled rare Double event! "
                                   "Do TWICE more reps as usual for each exercise! \n \n" +
-                                  random_exercise_text).encode(
-            'utf-8')
+                                  random_exercise_text).encode('utf-8')
     elif double_event_realization[0] == 0 and chill_event_realization[0] == 1:
         update.message.reply_text(
             "WOW! You've rolled rare Chill event! "
-            "No need to do exercises for today!").encode(
-            'utf-8')
+            "No need to do exercises for today!").encode('utf-8')
     else:
         update.message.reply_text(random_exercise_text).encode('utf-8')
 

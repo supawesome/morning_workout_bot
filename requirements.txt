@@ -1,2 +1,2 @@
-python-telegram-bot==13.11
 psycopg2-binary==2.9.3
+python-telegram-bot==13.11

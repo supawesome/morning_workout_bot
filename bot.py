@@ -23,7 +23,7 @@ def start(update: Update, context: CallbackContext) -> None:
 
     update.message.reply_text(
         'Hi, this is a workout bot. \n'
-        'This bot returns random exercise for each set of exercises. \n'
+        'This bot returns random exercise for each muscle group (upper, middle or lower body). \n'
         'Moreover, sometimes bot returns special events: \n'
         ' - 5% probability of a "Chill" event – means you may skip your workout today \n'
         ' - 10% probability of a "Double" event – means you should do twice more reps for each exercise this time \n \n'

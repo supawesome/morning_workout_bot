@@ -1,16 +1,16 @@
 import csv
 import os
 import random
+from collections import defaultdict
 
 import psycopg2
-from telegram import Update, ReplyKeyboardMarkup, constants, Dice
+from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import CallbackContext
-from collections import defaultdict
 
 
 DATABASE_URL = str(os.environ.get('DATABASE_URL'))
 CHILL_EVENT_C = 0.003802  # 5% https://gaming.stackexchange.com/questions/161430/calculating-the-constant-c-in-dota-2-pseudo-random-distribution?utm_source=pocket_mylist
-DOUBLE_EVENT_C = 0.014746  # 10%
+DOUBLE_EVENT_C = 0.014746  # 10% https://gaming.stackexchange.com/questions/161430/calculating-the-constant-c-in-dota-2-pseudo-random-distribution?utm_source=pocket_mylist
 
 
 def start(update: Update, context: CallbackContext) -> None:
@@ -40,7 +40,7 @@ def get_exercises(filename: str) -> dict:
 
     with open(filename, mode='r') as infile:
         reader = csv.reader(infile)
-        header = next(reader) # to refactor
+        header = next(reader)
         for row in reader:
             exercises_list.append(row)
 

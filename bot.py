@@ -1,10 +1,11 @@
+import csv
 import os
 import random
-import csv
 
 import psycopg2
 from telegram import Update, ReplyKeyboardMarkup, constants, Dice
 from telegram.ext import CallbackContext
+from collections import defaultdict
 
 
 DATABASE_URL = str(os.environ.get('DATABASE_URL'))
@@ -14,7 +15,6 @@ DOUBLE_EVENT_C = 0.014746  # 10%
 
 def start(update: Update, context: CallbackContext) -> None:
     """Sends a 'Hello' message when the command /start is issued."""
-
     keyboard = [
         '🎲',
     ]
@@ -35,8 +35,7 @@ def start(update: Update, context: CallbackContext) -> None:
 
 def get_exercises(filename: str) -> dict:
     """Gets data from csv file and places them in a dict."""
-
-    exercises_dict = {}
+    exercises_dict = defaultdict(list)
     exercises_list = []
 
     with open(filename, mode='r') as infile:
@@ -46,12 +45,7 @@ def get_exercises(filename: str) -> dict:
             exercises_list.append(row)
 
     for line in exercises_list:
-        if line[0] in exercises_dict:
-            # append the new number to the existing array at this slot
-            exercises_dict[line[0]].append(line[1])
-        else:
-            # create a new array in this slot
-            exercises_dict[line[0]] = [line[1]]
+        exercises_dict[line[0]].append(line[1])
 
     return exercises_dict
 
@@ -62,7 +56,6 @@ def get_random_exercises(exercise_dict: dict) -> dict:
     Args:
         exercise_dict: A dict of lists
     """
-
     random_exercises = {}
 
     for key, value in exercise_dict.items():
@@ -153,7 +146,6 @@ def get_workout(update: Update, context: CallbackContext) -> None:
 
 def help_command(update: Update, context: CallbackContext) -> None:
     """Sends a message when the command /help is issued."""
-
     update.message.reply_text(
         'Just tap on dice and get a set of random exercises! \n'
         'Each exercise belongs to different muscle group (upper, middle or lower body) \n \n'

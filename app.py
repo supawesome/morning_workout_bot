@@ -27,10 +27,12 @@ def main() -> None:
     )
 
     # Start the Bot
-    updater.start_webhook(listen="0.0.0.0",
-                          port=PORT,
-                          url_path=TOKEN,
-                          webhook_url='https://morning-workout-bot.herokuapp.com/' + TOKEN)
+    updater.start_webhook(
+        listen="0.0.0.0",
+        port=PORT,
+        url_path=TOKEN,
+        webhook_url='https://morning-workout-bot.herokuapp.com/' + TOKEN
+    )
 
     updater.idle()
 

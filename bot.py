@@ -65,9 +65,9 @@ def get_random_exercises(exercise_dict: dict) -> dict:
 
     random_exercises = {}
 
-    for (key, value) in exercise_dict.items():
-        no_exercises = len(value)
-        n = random.randint(0, no_exercises - 1)
+    for key, value in exercise_dict.items():
+        exercise_count = len(value)
+        n = random.randint(0, exercise_count - 1)
         random_exercises[key] = value[n]
 
     return random_exercises
@@ -135,7 +135,7 @@ def get_workout(update: Update, context: CallbackContext) -> None:
 
     random_exercise_list = []
 
-    exercises_dict = get_exercises('Config/exercises.csv')
+    exercises_dict = get_exercises('config/exercises.csv')
 
     for key in exercises_dict:
         random_exercise_list.append(get_random_exercises(exercises_dict)[key])

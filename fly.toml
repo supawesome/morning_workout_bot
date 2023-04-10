@@ -1,0 +1,21 @@
+# fly.toml file generated for workout-bot-prod on 2023-04-10T21:01:53+07:00
+
+app = "workout-bot-prod"
+kill_signal = "SIGINT"
+kill_timeout = 5
+mounts = []
+primary_region = "ams"
+processes = []
+
+
+[[services]]
+  internal_port = 80
+  protocol = "tcp"
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = "80"
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = "443"

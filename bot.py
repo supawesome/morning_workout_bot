@@ -1,4 +1,5 @@
 import csv
+import logging
 import os
 import random
 from collections import defaultdict
@@ -12,12 +13,17 @@ DATABASE_URL = str(os.environ.get('DATABASE_URL'))
 CHILL_EVENT_C = 0.003802  # 5% https://gaming.stackexchange.com/questions/161430/calculating-the-constant-c-in-dota-2-pseudo-random-distribution?utm_source=pocket_mylist
 DOUBLE_EVENT_C = 0.014746  # 10% https://gaming.stackexchange.com/questions/161430/calculating-the-constant-c-in-dota-2-pseudo-random-distribution?utm_source=pocket_mylist
 
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logger = logging.getLogger()
+
 
 def start(update: Update, context: CallbackContext) -> None:
     """Sends a 'Hello' message when the command /start is issued."""
     keyboard = [
         '🎲',
     ]
+
+    logging.warning(f'Got message from {update.effective_chat.username}')
 
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 

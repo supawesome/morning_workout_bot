@@ -26,7 +26,8 @@ def main() -> None:
         listen="0.0.0.0",
         port=PORT,
         url_path=TOKEN,
-        webhook_url='https://morning-workout-bot.herokuapp.com/' + TOKEN
+        # webhook_url='https://morning-workout-bot.herokuapp.com/' + TOKEN
+        webhook_url='https://workout-bot-prod.fly.dev/' + TOKEN
     )
 
     updater.idle()

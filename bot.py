@@ -10,8 +10,9 @@ from telegram.ext import CallbackContext
 
 
 DATABASE_URL = str(os.environ.get('DATABASE_URL'))
-CHILL_EVENT_C = 0.003802  # 5% https://gaming.stackexchange.com/questions/161430/calculating-the-constant-c-in-dota-2-pseudo-random-distribution?utm_source=pocket_mylist
-DOUBLE_EVENT_C = 0.014746  # 10% https://gaming.stackexchange.com/questions/161430/calculating-the-constant-c-in-dota-2-pseudo-random-distribution?utm_source=pocket_mylist
+DATABASE_PASSWORD = str(os.environ.get('DATABASE_PASSWORD'))
+CHILL_EVENT_C = 0.003802  # 5% please refer to https://github.com/supawesome/PRD
+DOUBLE_EVENT_C = 0.014746  # 10% also, refer to https://github.com/supawesome/PRD
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger()
@@ -23,7 +24,7 @@ def start(update: Update, context: CallbackContext) -> None:
         '🎲',
     ]
 
-    logging.warning(f'Got message from {update.effective_chat.username}')
+    logging.info(f'Got start message from {update.effective_chat.username}')
 
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
@@ -82,14 +83,24 @@ def get_workout(update: Update, context: CallbackContext) -> None:
     chat_id = update.message.chat_id
     username = update.message.from_user.username
 
-    conn = psycopg2.connect(DATABASE_URL)
+    conn = psycopg2.connect(
+        host=DATABASE_URL,
+        dbname='postgres',
+        port=5432,
+        user='postgres',
+        password=DATABASE_PASSWORD
+    )
     cursor = conn.cursor()
     cursor.execute(f"SELECT chat_id FROM users WHERE chat_id = '{chat_id}'")
     query_result = cursor.fetchone()
 
     if query_result is None:
-        cursor.execute(f"INSERT INTO users (chat_id, username, double_event_counter, chill_event_counter)"
-                       f" VALUES ('{chat_id}', '{username}', 0, 0)")
+        cursor.execute(f"INSERT INTO users (chat_id, username, double_event_counter, chill_event_counter, rolls_counter)"
+                       f" VALUES ('{chat_id}', '{username}', 0, 0, 0)")
+        double_event_realization = []
+        double_event_realization.append(0)
+        chill_event_realization = []
+        chill_event_realization.append(0)
         conn.commit()
     else:
         cursor.execute(f"SELECT double_event_counter FROM users WHERE chat_id = '{chat_id}'")
@@ -124,6 +135,8 @@ def get_workout(update: Update, context: CallbackContext) -> None:
                            f"WHERE chat_id = '{chat_id}';")
         conn.commit()
 
+    cursor.execute(f"UPDATE users SET rolls_counter = rolls_counter + 1 WHERE chat_id = '{chat_id}';")
+    conn.commit()
     cursor.close()
     conn.close()
 
@@ -134,24 +147,25 @@ def get_workout(update: Update, context: CallbackContext) -> None:
     for key in exercises_dict:
         random_exercise_list.append(get_random_exercises(exercises_dict)[key])
 
-    random_exercise_text = ',\n'.join(random_exercise_list)
+    random_exercise_text = '\n'.join(random_exercise_list) + '\nhttps://telegra.ph/Exercises-instructions-04-11'
     if double_event_realization[0] == 1 and chill_event_realization[0] == 1:
         update.message.reply_text(
-            'WOW! You rolled rare Chill event! No need to do these exercises for today!').encode('utf-8')
+            "WOW! You've rolled rare Chill event! "
+            'No need to do these exercises for today!')
     elif double_event_realization[0] == 1 and chill_event_realization[0] == 0:
         update.message.reply_text("BOOM! You've rolled rare Double event! "
                                   "Do TWICE more reps as usual for each exercise! \n \n" +
-                                  random_exercise_text).encode('utf-8')
+                                  random_exercise_text, disable_web_page_preview=True)
     elif double_event_realization[0] == 0 and chill_event_realization[0] == 1:
         update.message.reply_text(
             "WOW! You've rolled rare Chill event! "
-            "No need to do exercises for today!").encode('utf-8')
+            'No need to do exercises for today!')
     else:
-        update.message.reply_text(random_exercise_text).encode('utf-8')
+        update.message.reply_text(random_exercise_text, disable_web_page_preview=True)
 
 
 def help_command(update: Update, context: CallbackContext) -> None:
-    """Sends a message when the command /help is issued."""
+    """Sends a message when the command /help is issued"""
     update.message.reply_text(
         'Just tap on dice and get a set of random exercises! \n'
         'Each exercise belongs to different muscle group (upper, middle or lower body) \n \n'

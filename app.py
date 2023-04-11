@@ -2,7 +2,7 @@ import os
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
-from src.bot import start, help_command, get_workout
+from src.bot import start, help_command, prepare_and_send_workout
 
 
 def main() -> None:
@@ -19,7 +19,7 @@ def main() -> None:
     dispatcher.add_handler(MessageHandler(
         (Filters.regex('🎲') | Filters.dice.dice)
         & ~Filters.command,
-        get_workout)
+        prepare_and_send_workout)
     )
 
     updater.start_webhook(

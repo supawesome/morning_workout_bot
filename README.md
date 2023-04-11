@@ -11,7 +11,7 @@ The process of special events is sampled from Pseudo Random Distribution (like r
 ## Usage
 - Start a conversation with the bot by searching for it in Telegram: [t.me/MorningWorkoutBot](https://t.me/MorningWorkoutBot)
 - Type /start to start the bot
-- Tap on the dice to get a set of random exercises
+- Tap on the dice to get a set of random exercises  
 Each exercise belongs to a different major muscle group (upper, middle or lower body)
 - Follow the instructions provided in the Telegram bot for each exercise.
 

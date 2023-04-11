@@ -29,13 +29,13 @@ def start(update: Update, context: CallbackContext) -> None:
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
     update.message.reply_text(
-        'Hi, this is a workout bot. \n'
-        'This bot returns random exercise for each muscle group (upper, middle or lower body). \n'
-        'Moreover, sometimes bot returns special events: \n'
+        'Welcome to the workout bot! \n'
+        'This bot generates random exercise for each major muscle group (upper, middle or lower body). \n'
+        'Moreover, sometimes bot may trigger special events: \n'
         ' - 5% probability of a "Chill" event – means you may skip your workout today \n'
         ' - 10% probability of a "Double" event – means you should do twice more reps for each exercise this time \n \n'
-        "Let's roll the dice to get a nice pseudo-random morning workout \n \n"
-        "Also, there is /help command.",
+        "Let's roll the dice to get a nice pseudo-random morning workou!t \n \n"
+        "To learn more, type /help command.",
         reply_markup=reply_markup
     )
 
@@ -153,8 +153,8 @@ def get_workout(update: Update, context: CallbackContext) -> None:
             "WOW! You've rolled rare Chill event! "
             'No need to do these exercises for today!')
     elif double_event_realization[0] == 1 and chill_event_realization[0] == 0:
-        update.message.reply_text("BOOM! You've rolled rare Double event! "
-                                  "Do TWICE more reps as usual for each exercise! \n \n" +
+        update.message.reply_text("BOOM! You've rolled the rare Double event! "
+                                  "Do TWICE as many reps as usual for each exercise! \n \n" +
                                   random_exercise_text, disable_web_page_preview=True)
     elif double_event_realization[0] == 0 and chill_event_realization[0] == 1:
         update.message.reply_text(
@@ -167,10 +167,10 @@ def get_workout(update: Update, context: CallbackContext) -> None:
 def help_command(update: Update, context: CallbackContext) -> None:
     """Sends a message when the command /help is issued"""
     update.message.reply_text(
-        'Just tap on dice and get a set of random exercises! \n'
-        'Each exercise belongs to different muscle group (upper, middle or lower body) \n \n'
+        'Just tap on the dice and get a set of random exercises! \n'
+        'Each exercise belongs to different major muscle group (upper, middle or lower body) \n \n'
         'Why workout is pseudo random? Procs of special events are sampled '
         'from Pseudo-Random Distribution (like random-based abilities in Dota 2) \n'
         'You can read more about the mechanism here: '
-        'https://github.com/supawesome/morning_workout_bot/blob/main/PRD.md)'
+        'https://github.com/supawesome/PRD'
     )

@@ -171,6 +171,6 @@ def help_command(update: Update, context: CallbackContext) -> None:
         'Each exercise belongs to different major muscle group (upper, middle or lower body) \n \n'
         'Why workout is pseudo random? Procs of special events are sampled '
         'from Pseudo-Random Distribution (like random-based abilities in Dota 2) \n'
-        'You can read more about the mechanism here: '
+        'For more information on how this works, check out this link: '
         'https://github.com/supawesome/PRD'
     )

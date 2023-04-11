@@ -17,3 +17,16 @@ DOUBLE_EVENT_MESSAGE = (
     "Do TWICE as many reps as usual for each exercise! \n \n"
 )
 
+EXERCISE_INSTRUCTIONS_LINK = (
+    'https://telegra.ph/Exercises-instructions-04-11'
+)
+
+START_MESSAGE = (
+        'Welcome to the workout bot! \n'
+        'This bot generates random exercise for each major muscle group (upper, middle or lower body). \n'
+        'Moreover, sometimes bot may trigger special events: \n'
+        ' - 5% probability of a "Chill" event – means you may skip your workout today \n'
+        ' - 10% probability of a "Double" event – means you should do twice more reps for each exercise this time \n \n'
+        "Let's roll the dice to get a nice pseudo-random morning workou!t \n \n"
+        "To learn more, type /help command.",
+)

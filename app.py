@@ -2,7 +2,7 @@ import os
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
-from bot import start, help_command, get_workout
+from src.bot import start, help_command, get_workout
 
 
 def main() -> None:

@@ -1,11 +1,11 @@
 # Morning Workout bot
-Telegram bot for morning workout with special some special events, 
+Telegram bot for morning workout with special events, 
 sampled from pseudo random distribution (like passive abilities in Dota 2).
 
 [t.me/MorningWorkoutBot](https://t.me/MorningWorkoutBot)
 \
 \
-Works using Fly.io and Supabase Postgres database.
+Deployed using Fly.io with Supabase Postgres database.
 \
 \
 \

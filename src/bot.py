@@ -8,7 +8,7 @@ import psycopg2
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import CallbackContext
 
-from configs.message_config import HELP_MESSAGE, CHILL_EVENT_MESSAGE, DOUBLE_EVENT_MESSAGE
+from configs.message_config import START_MESSAGE, HELP_MESSAGE, CHILL_EVENT_MESSAGE, DOUBLE_EVENT_MESSAGE, EXERCISE_INSTRUCTIONS_LINK
 
 DATABASE_URL = str(os.environ.get('DATABASE_URL'))
 DATABASE_PASSWORD = str(os.environ.get('DATABASE_PASSWORD'))
@@ -28,17 +28,8 @@ def start(update: Update, context: CallbackContext) -> None:
     logging.info(f'Got start message from {update.effective_chat.username}')
 
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
-
-    update.message.reply_text(
-        'Welcome to the workout bot! \n'
-        'This bot generates random exercise for each major muscle group (upper, middle or lower body). \n'
-        'Moreover, sometimes bot may trigger special events: \n'
-        ' - 5% probability of a "Chill" event – means you may skip your workout today \n'
-        ' - 10% probability of a "Double" event – means you should do twice more reps for each exercise this time \n \n'
-        "Let's roll the dice to get a nice pseudo-random morning workou!t \n \n"
-        "To learn more, type /help command.",
-        reply_markup=reply_markup
-    )
+    
+    update.message.reply_text(START_MESSAGE, reply_markup=reply_markup)
 
 
 def get_exercises(filename: str) -> dict:
@@ -145,7 +136,7 @@ def get_workout(update: Update, context: CallbackContext) -> None:
     for key in exercises_dict:
         random_exercise_list.append(get_random_exercises(exercises_dict)[key])
 
-    random_exercise_text = '\n'.join(random_exercise_list) + '\n\nhttps://telegra.ph/Exercises-instructions-04-11'
+    random_exercise_text = '\n'.join(random_exercise_list) + '\n\n' + EXERCISE_INSTRUCTIONS_LINK
     if double_event_realization[0] == 1 and chill_event_realization[0] == 1:
         update.message.reply_text(CHILL_EVENT_MESSAGE)
         cursor.execute(f"INSERT INTO user_roll (chat_id, username, roll_result, is_double_event, is_chill_event)"

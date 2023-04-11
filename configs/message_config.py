@@ -27,6 +27,6 @@ START_MESSAGE = (
     'Moreover, sometimes bot may trigger special events: \n'
     ' - 5% probability of a "Chill" event – means you may skip your workout today \n'
     ' - 10% probability of a "Double" event – means you should do twice more reps for each exercise this time \n \n'
-    "Let's roll the dice to get a nice pseudo-random morning workou!t \n \n"
-    "To learn more, type /help command."
+    "Let's roll the dice to get a nice pseudo random morning workou!t \n \n"
+    "To learn more (especially why it is called pseudo random), use /help command."
 )

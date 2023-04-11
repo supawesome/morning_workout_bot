@@ -8,6 +8,7 @@ import psycopg2
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import CallbackContext
 
+from configs.message_config import HELP_MESSAGE, CHILL_EVENT_MESSAGE, DOUBLE_EVENT_MESSAGE
 
 DATABASE_URL = str(os.environ.get('DATABASE_URL'))
 DATABASE_PASSWORD = str(os.environ.get('DATABASE_PASSWORD'))
@@ -136,41 +137,37 @@ def get_workout(update: Update, context: CallbackContext) -> None:
         conn.commit()
 
     cursor.execute(f"UPDATE users SET rolls_counter = rolls_counter + 1 WHERE chat_id = '{chat_id}';")
-    conn.commit()
-    cursor.close()
-    conn.close()
 
     random_exercise_list = []
 
-    exercises_dict = get_exercises(os.path.join('config', 'exercises.csv'))
+    exercises_dict = get_exercises(os.path.join('configs', 'exercises.csv'))
 
     for key in exercises_dict:
         random_exercise_list.append(get_random_exercises(exercises_dict)[key])
 
-    random_exercise_text = '\n'.join(random_exercise_list) + '\nhttps://telegra.ph/Exercises-instructions-04-11'
+    random_exercise_text = '\n'.join(random_exercise_list) + '\n\nhttps://telegra.ph/Exercises-instructions-04-11'
     if double_event_realization[0] == 1 and chill_event_realization[0] == 1:
-        update.message.reply_text(
-            "WOW! You've rolled rare Chill event! "
-            'No need to do these exercises for today!')
+        update.message.reply_text(CHILL_EVENT_MESSAGE)
+        cursor.execute(f"INSERT INTO user_roll (chat_id, username, roll_result, is_double_event, is_chill_event)"
+                       f" VALUES ('{chat_id}', '{username}', '{CHILL_EVENT_MESSAGE}', {True}, {True})")
     elif double_event_realization[0] == 1 and chill_event_realization[0] == 0:
-        update.message.reply_text("BOOM! You've rolled the rare Double event! "
-                                  "Do TWICE as many reps as usual for each exercise! \n \n" +
-                                  random_exercise_text, disable_web_page_preview=True)
+        update.message.reply_text(DOUBLE_EVENT_MESSAGE + random_exercise_text, disable_web_page_preview=True)
+        cursor.execute(f"INSERT INTO user_roll (chat_id, username, roll_result, is_double_event, is_chill_event)"
+                       f" VALUES ('{chat_id}', '{username}', '{DOUBLE_EVENT_MESSAGE + random_exercise_text}',"
+                       f" {True}, {False})")
     elif double_event_realization[0] == 0 and chill_event_realization[0] == 1:
-        update.message.reply_text(
-            "WOW! You've rolled rare Chill event! "
-            'No need to do exercises for today!')
+        update.message.reply_text(CHILL_EVENT_MESSAGE)
+        cursor.execute(f"INSERT INTO user_roll (chat_id, username, roll_result, is_double_event, is_chill_event)"
+                       f" VALUES ('{chat_id}', '{username}', '{CHILL_EVENT_MESSAGE}', {False}, {True})")
     else:
         update.message.reply_text(random_exercise_text, disable_web_page_preview=True)
+        cursor.execute(f"INSERT INTO user_roll (chat_id, username, roll_result, is_double_event, is_chill_event)"
+                       f" VALUES ('{chat_id}', '{username}', '{random_exercise_text}', {False}, {False})")
+    conn.commit()
+    cursor.close()
+    conn.close()
 
 
 def help_command(update: Update, context: CallbackContext) -> None:
     """Sends a message when the command /help is issued"""
-    update.message.reply_text(
-        'Just tap on the dice and get a set of random exercises! \n'
-        'Each exercise belongs to different major muscle group (upper, middle or lower body) \n \n'
-        'Why workout is pseudo random? Procs of special events are sampled '
-        'from Pseudo-Random Distribution (like random-based abilities in Dota 2) \n'
-        'For more information on how this works, check out this link: '
-        'https://github.com/supawesome/PRD'
-    )
+    update.message.reply_text(HELP_MESSAGE)

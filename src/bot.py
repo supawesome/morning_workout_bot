@@ -179,4 +179,4 @@ def prepare_and_send_workout(update: Update, context: CallbackContext) -> None:
 
 def help_command(update: Update, context: CallbackContext) -> None:
     """Sends a message when the command /help is issued"""
-    update.message.reply_text(HELP_MESSAGE)
+    update.message.reply_text(HELP_MESSAGE, disable_web_page_preview=True)

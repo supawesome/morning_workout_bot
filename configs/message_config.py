@@ -1,5 +1,5 @@
 HELP_MESSAGE = (
-    'Just tap on the dice and get a set of random exercises! \n'
+    'Just tap on the dice and get a set of pseudo random exercises! \n'
     'Each exercise belongs to different major muscle group (upper, middle or lower body) \n \n'
     'Why workout is pseudo random? Procs of special events are sampled '
     'from Pseudo-Random Distribution (like random-based abilities in Dota 2) \n'
